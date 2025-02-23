@@ -2,7 +2,7 @@
   "name": "watch-presentation",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://adeetyaofficialgit.github.io/watch-portal-presentation",
+  "homepage": "https://adeetyaofficialgit.github.io/ProjectWatchPresentation",
   "type": "module",
   "scripts": {
     "dev": "vite",
