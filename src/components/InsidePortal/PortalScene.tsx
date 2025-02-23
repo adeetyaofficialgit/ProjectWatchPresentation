@@ -6,8 +6,8 @@ export const frontFaceStandingDimensions = [0, 0, -0.01];
 export const sideFaceSleepingDimensions = [0.01, 0, -0.01];
 
 const PortalScene = () => {
-  const { scene } = useGLTF(`/watchModeldraft2.glb`);
-  const envTexture = useTexture(`/starsDark2.JPG`);
+  const { scene } = useGLTF(`/ProjectWatchPresentation/watchModeldraft2.glb`);
+  const envTexture = useTexture(`/ProjectWatchPresentation/starsDark2.JPG`);
 
   // DirectionLight helpers
   const lightRef = useRef(new THREE.DirectionalLight());
