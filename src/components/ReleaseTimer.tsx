@@ -1,6 +1,7 @@
 import { Text } from "@react-three/drei";
 import { useCountdown } from "../helpers/useCountdown";
 import React from "react";
+import * as THREE from "three";
 
 const ReleaseTimer = () => {
   const getTomorrowDate = React.useMemo(() => {
@@ -12,7 +13,15 @@ const ReleaseTimer = () => {
 
   return (
     <>
-      <Text color="white" position={[0, 0, 4]} letterSpacing={2} castShadow>
+      <Text
+        color="white"
+        position={[0, -1, 4]}
+        letterSpacing={1}
+        castShadow
+        fontSize={1.5}
+        fontWeight={900}
+        fillOpacity={0.5}
+      >
         {timeleft}
       </Text>
     </>

@@ -5,20 +5,25 @@ import {
   MeshReflectorMaterial,
   PortalMaterialType,
   RoundedBox,
+  Sparkles,
   Sphere,
 } from "@react-three/drei";
-import PortalScene from "./InsidePortal/PortalScene";
+import PortalScene from "./PortalScene";
 import { useEffect, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { CameraControls } from "@react-three/drei";
+import {
+  cameraControlsSelector,
+  useAppControls,
+} from "../providers/controlsContextProvider";
 
 const Portal = () => {
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState<boolean | undefined>(undefined);
   const portalRef = useRef<PortalMaterialType>(null);
-  const cameraRef = useRef<any>(null);
+  const cameraRef = useAppControls(cameraControlsSelector);
 
-  useFrame((_, delta) => {
+  useFrame((scene, delta) => {
     if (portalRef.current) {
       portalRef.current.blend = THREE.MathUtils.lerp(
         portalRef.current.blend,
@@ -29,25 +34,27 @@ const Portal = () => {
   });
 
   useEffect(() => {
-    if (active) {
+    if (!cameraRef.current) return;
+    if (active == true) {
       cameraRef.current.setLookAt(0, 1.5, 3, 0, 2, 0, true);
-    } else {
-      cameraRef.current.setLookAt(0, 1.5, 15, 0, 2, 0, true);
+    } else if (active == false) {
+      cameraRef.current.setLookAt(0, 1.5, 10, 0, 2, 0, true);
     }
   }, [active]);
 
   return (
     <>
-      <CameraControls ref={cameraRef} />
-      {/* Actual Portal box */}
       <ambientLight intensity={5} />
-      <Sphere args={[10, 4, 4]} position={[0, 5, -25]}>
-        <meshStandardMaterial
-          emissive={"orange"}
-          emissiveIntensity={0.5}
-          color="red"
-        />
-      </Sphere>
+      <group>
+        <Sphere args={[13, 4, 4]} position={[0, 5, -25]}>
+          <meshStandardMaterial
+            emissive={"orange"}
+            emissiveIntensity={0.3}
+            color="red"
+          />
+        </Sphere>
+      </group>
+      {/* Actual Portal box */}
       <group position={[0, 2, 0]}>
         <RoundedBox
           args={[6.2, 8.2, 0.01]}
@@ -64,31 +71,10 @@ const Portal = () => {
           onDoubleClick={() => setActive(!active)}
         >
           <MeshPortalMaterial ref={portalRef}>
-            <PortalScene />
+            <PortalScene isActive={active || false} />
           </MeshPortalMaterial>
         </RoundedBox>
       </group>
-      {/* Base of Portal which reflects light */}
-      <CubeCamera>
-        {(texture) => (
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
-            <planeGeometry args={[100, 100]} />
-            <MeshReflectorMaterial
-              resolution={1024}
-              mixBlur={1}
-              mixStrength={80}
-              roughness={0.5}
-              depthScale={1.2}
-              minDepthThreshold={0.4}
-              maxDepthThreshold={1.4}
-              color="#050505"
-              metalness={0.5}
-              mirror={0.9}
-              map={texture}
-            />
-          </mesh>
-        )}
-      </CubeCamera>
     </>
   );
 };
